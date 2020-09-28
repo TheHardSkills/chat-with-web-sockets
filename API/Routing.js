@@ -23,10 +23,11 @@ app.use(bodyParser.json());
 
 app.post("/login", async (request, response) => {
   const loginController = new LoginController();
-  let loginResult = loginController.tryLoginUser(
+  let loginResult = await loginController.tryLoginUser(
     request.body.username,
     request.body.password
-  ); //isAutorize, Error
+  );
+  response.send(loginResult);
 });
 
 app.get("/chat", async (request, response) => {

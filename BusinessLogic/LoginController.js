@@ -6,16 +6,14 @@ const jwtGenerator = userAutentification.jwtGenerator;
 
 class LoginController {
   async tryLoginUser(username, password) {
-    let loginUserInfo = await this.userCreation(username, password);
-    console.log("loginUserInfo", loginUserInfo);
+    return await this.userCreation(username, password);
   }
 
   async userCreation(username, password) {
-    const resultObject = { isLogin: false, error: "", token: "" };
+    const resultObject = { error: "", token: "" };
 
     let finderUser = await dataProvider.findOneUserByFilter({ username });
     if (finderUser) {
-      console.log("res 1", finderUser);
       if (password === finderUser.password) {
         const token = jwtGenerator({
           username: finderUser.username,
@@ -24,7 +22,6 @@ class LoginController {
         return {
           ...resultObject,
           token,
-          isLogin: true,
         };
       }
       return {
@@ -33,7 +30,6 @@ class LoginController {
       };
     }
     let newUser = await dataProvider.createOneUser(username, password);
-    console.log("res 2", newUser);
 
     const token = jwtGenerator({
       username: newUser.username,
@@ -42,7 +38,6 @@ class LoginController {
 
     return {
       ...resultObject,
-      isLogin: true,
       token,
     };
   }
