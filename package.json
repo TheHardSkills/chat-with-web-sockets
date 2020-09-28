@@ -1,0 +1,27 @@
+{
+  "name": "chat-with-web-sockets",
+  "version": "1.0.0",
+  "description": "Chat Application with Web Sockets in Node.js",
+  "main": "server.js",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "mongoose": "^5.10.7",
+    "nodemon": "^2.0.4"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon app"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TheHardSkills/chat-with-web-sockets.git"
+  },
+  "author": "Yuliia",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/TheHardSkills/chat-with-web-sockets/issues"
+  },
+  "homepage": "https://github.com/TheHardSkills/chat-with-web-sockets#readme"
+}
