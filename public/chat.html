@@ -2,10 +2,28 @@
 <html>
   <head>
     <title>Chat on websockets</title>
+    <!-- <link rel="stylesheet" href="style.css" /> -->
   </head>
-  <body style="backgroung:yellow">
-    <div>CHAT</div>
-    <!-- <script src="login_form_creator.js"></script>
-    <script src="client.js"></script> -->
+  <body>
+    <div id="mainConteiner">
+      <div id="sendMessagePanel">
+        <form id="formForMessageCreate" onsubmit="return false">
+          <input id="inputWithMessageFromClient" />
+          <button class="button" onclick="sendUserMessage()">
+            Send message
+          </button>
+        </form>
+      </div>
+
+      <!-- <div id="infoContainer">
+        <div id="onlineUsersBlock">
+          <p id="blockHeader">ONLINE USERS:</p>
+        </div>
+      </div> -->
+      <div id="allUsersBlock"></div>
+    </div>
+
+    <script src=" http://localhost:3000/socket.io/socket.io.js"></script>
+    <script src="chatClient.js"></script>
   </body>
 </html>

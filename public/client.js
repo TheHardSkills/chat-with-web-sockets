@@ -1,6 +1,4 @@
 const sendRequestWithUserData = async () => {
-  // document.location = "http://localhost:8000/chat";
-
   let username = document.getElementById("usernameField").value;
   let password = document.getElementById("passwordField").value;
 

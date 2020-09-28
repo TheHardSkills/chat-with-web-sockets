@@ -1,7 +1,7 @@
-const DataProvider = require("../DataProvider/DataProvider");
+const DataProvider = require("../Services/UsersService");
 const dataProvider = new DataProvider();
 
-const userAutentification = require("../BusinessLogic/UserAuthentication");
+const userAutentification = require("../Services/TokensService");
 const jwtGenerator = userAutentification.jwtGenerator;
 
 class LoginController {
@@ -11,10 +11,11 @@ class LoginController {
 
   async userCreation(username, password) {
     const resultObject = { error: "", token: "" };
-
     let finderUser = await dataProvider.findOneUserByFilter({ username });
+
     if (finderUser) {
       if (password === finderUser.password) {
+        //if (crypt(password) === finderUser.password) {
         const token = jwtGenerator({
           isOnline: finderUser.isOnline,
           adminStatus: finderUser.adminStatus,
@@ -22,11 +23,13 @@ class LoginController {
           onBan: finderUser.onBan,
           username: finderUser.username,
         });
+
         return {
           ...resultObject,
           token,
         };
       }
+
       return {
         ...resultObject,
         error: "Incorrect password",
