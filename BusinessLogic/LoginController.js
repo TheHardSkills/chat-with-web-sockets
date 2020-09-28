@@ -16,8 +16,11 @@ class LoginController {
     if (finderUser) {
       if (password === finderUser.password) {
         const token = jwtGenerator({
+          isOnline: finderUser.isOnline,
+          adminStatus: finderUser.adminStatus,
+          onMute: finderUser.onMute,
+          onBan: finderUser.onBan,
           username: finderUser.username,
-          password: finderUser.password,
         });
         return {
           ...resultObject,
@@ -32,8 +35,11 @@ class LoginController {
     let newUser = await dataProvider.createOneUser(username, password);
 
     const token = jwtGenerator({
+      isOnline: newUser.isOnline,
+      adminStatus: newUser.adminStatus,
+      onMute: newUser.onMute,
+      onBan: newUser.onBan,
       username: newUser.username,
-      password: newUser.password,
     });
 
     return {

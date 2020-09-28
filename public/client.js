@@ -18,4 +18,7 @@ const sendRequestWithUserData = async () => {
     return;
   }
   localStorage.setItem("token", token);
+  if (localStorage.getItem("token")) {
+    document.location = "http://localhost:8000/chat";
+  }
 };
