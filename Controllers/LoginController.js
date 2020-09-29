@@ -18,11 +18,12 @@ class LoginController {
     if (finderUser) {
       if (passwordHash.verify(password, finderUser.password)) {
         const token = jwtGenerator({
-          isOnline: finderUser.isOnline,
+          // isOnline: finderUser.isOnline,
           adminStatus: finderUser.adminStatus,
           onMute: finderUser.onMute,
-          onBan: finderUser.onBan,
+          // onBan: finderUser.onBan,
           username: finderUser.username,
+          id: finderUser.id,
         });
 
         return {
@@ -42,11 +43,12 @@ class LoginController {
     );
 
     const token = jwtGenerator({
-      isOnline: newUser.isOnline,
+      // isOnline: newUser.isOnline,
       adminStatus: newUser.adminStatus,
       onMute: newUser.onMute,
-      onBan: newUser.onBan,
+      // onBan: newUser.onBan,
       username: newUser.username,
+      id: newUser.id,
     });
 
     return {

@@ -5,14 +5,23 @@ const messageDataProvider = new MessageDataProvider();
 const timeService = require("../Services/TimeService");
 const currentTime = timeService.getCurrentTime;
 
-// const allMessages = await messageDataProvider.getAllMessages();
+// const getAllMessages = async () => {
+//   return await messageDataProvider.getAllMessages();
+// };
+// console.log("getAllMessages", getAllMessages());
 
 //senderUsername
 const senderUsername = "const_value";
 
 exports.handleConnection = (connection) => {
-  //   connection.emit("download message history", allMessages);
-  //   connection.broadcast.emit("download message history", allMessages);
+  //   connection.emit("download message history", getAllMessages);
+  //   connection.broadcast.emit("download message history", getAllMessages);
+
+  const token = connection[find_in_doc].token;
+  // 1. verification
+  // 2. get user id
+  // 3. check banned status
+  // if any false - disconnect
 
   connection.on("chat message", (msg) => {
     //{msg, username}

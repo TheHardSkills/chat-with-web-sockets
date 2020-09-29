@@ -1,4 +1,4 @@
-const socket = io("http://localhost:3000");
+const socket = io("http://localhost:3000/?token=sdfsdffdsfdssdf");
 
 socket.on("connection", () => {
   console.log("We are connection");
