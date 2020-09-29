@@ -1,6 +1,3 @@
-const MessagesService = require("../Services/MessagesService");
-const messagesService = new MessagesService();
-
 const MessageDataProvider = require("../Services/MessagesService");
 const messageDataProvider = new MessageDataProvider();
 
