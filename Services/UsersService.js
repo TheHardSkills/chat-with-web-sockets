@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const User = require("./Models/userModel");
+const User = require("../Models/userModel");
 
 class UsersService {
   createOneUser(username, password, adminStatus) {
@@ -17,4 +17,4 @@ class UsersService {
   }
 }
 
-module.exports = DataProvider;
+module.exports = UsersService;

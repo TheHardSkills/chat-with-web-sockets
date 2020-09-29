@@ -1,3 +1,6 @@
+const HashService = require("../Services/HashService");
+const passwordHash = new HashService();
+
 const DataProvider = require("../Services/UsersService");
 const dataProvider = new DataProvider();
 
@@ -6,7 +9,8 @@ const jwtGenerator = userAutentification.jwtGenerator;
 
 class LoginController {
   async tryLoginUser(username, password) {
-    return await this.userCreation(username, password);
+    const hashedPassword = passwordHash.generate(password);
+    return await this.userCreation(username, hashedPassword);
   }
 
   async userCreation(username, password) {
@@ -15,7 +19,6 @@ class LoginController {
 
     if (finderUser) {
       if (password === finderUser.password) {
-        //if (crypt(password) === finderUser.password) {
         const token = jwtGenerator({
           isOnline: finderUser.isOnline,
           adminStatus: finderUser.adminStatus,
