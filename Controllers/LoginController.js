@@ -1,5 +1,4 @@
-const HashService = require("../Services/HashService");
-const passwordHash = new HashService();
+const passwordHash = require("password-hash");
 
 const DataProvider = require("../Services/UsersService");
 const dataProvider = new DataProvider();
@@ -9,8 +8,7 @@ const jwtGenerator = userAutentification.jwtGenerator;
 
 class LoginController {
   async tryLoginUser(username, password) {
-    const hashedPassword = passwordHash.generate(password);
-    return await this.userCreation(username, hashedPassword);
+    return await this.userCreation(username, password);
   }
 
   async userCreation(username, password) {
@@ -18,7 +16,7 @@ class LoginController {
     let finderUser = await dataProvider.findOneUserByFilter({ username });
 
     if (finderUser) {
-      if (password === finderUser.password) {
+      if (passwordHash.verify(password, finderUser.password)) {
         const token = jwtGenerator({
           isOnline: finderUser.isOnline,
           adminStatus: finderUser.adminStatus,
@@ -38,7 +36,10 @@ class LoginController {
         error: "Incorrect password",
       };
     }
-    let newUser = await dataProvider.createOneUser(username, password);
+    let newUser = await dataProvider.createOneUser(
+      username,
+      passwordHash.generate(password)
+    );
 
     const token = jwtGenerator({
       isOnline: newUser.isOnline,

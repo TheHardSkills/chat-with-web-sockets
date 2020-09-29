@@ -25,11 +25,13 @@ app.listen(8000);
 //WS:
 
 const server = require("http").createServer(app);
-const io = require("socket.io", { transports: ["websocket"] })(server);
+const io = require("socket.io")(server);
 
 io.on("connection", (socket) => {
   socket.on("chat message", (msg) => {
-    console.log("message: " + msg);
+    console.log("message: " + msg); //запись в БД
+    socket.emit("message", msg);
+    socket.broadcast.emit("message", msg);
   });
 });
 server.listen(3000, () => {

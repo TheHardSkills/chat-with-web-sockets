@@ -8,8 +8,3 @@ exports.jwtGenerator = (payload) => {
     expiresIn: "24h",
   });
 };
-
-exports.verifyToken = async (token) => {
-  const decoded = jwt.verify(token, secretKey);
-  return decoded.password;
-};

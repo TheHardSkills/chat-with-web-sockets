@@ -2,7 +2,7 @@ var express = require("express");
 const router = express.Router();
 
 const LoginController = require("../Controllers/LoginController");
-
+// todo
 router.post("/login", async (request, response) => {
   const loginController = new LoginController();
   response.send(
@@ -13,7 +13,7 @@ router.post("/login", async (request, response) => {
   );
 });
 
-router.get("/chat", async (request, response) => {
+router.get("/chat", (request, response) => {
   response.sendFile("/chat.html", { root: "./public" });
 });
 
