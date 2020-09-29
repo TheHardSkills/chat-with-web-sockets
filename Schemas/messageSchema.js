@@ -7,7 +7,7 @@ const messageSchema = new mongoose.Schema({
     maxlength: 200,
   },
   senderUsername: String,
-  departureTime: String,
+  addTime: String,
 });
 
 module.exports = messageSchema;

@@ -1,4 +1,3 @@
-const mongoose = require("mongoose");
 const User = require("../Models/userModel");
 
 class UsersService {
@@ -6,10 +5,6 @@ class UsersService {
     let user = new User({ username, password });
 
     return user.save();
-  }
-
-  findSomeOne() {
-    return User.findOne().exec();
   }
 
   findOneUserByFilter(filter) {
