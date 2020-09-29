@@ -3,13 +3,10 @@ const router = express.Router();
 
 const LoginController = require("../Controllers/LoginController");
 // todo
-router.post("/login", async (request, response) => {
+router.post("/login", (request, response) => {
   const loginController = new LoginController();
   response.send(
-    await loginController.tryLoginUser(
-      request.body.username,
-      request.body.password
-    )
+    loginController.tryLoginUser(request.body.username, request.body.password)
   );
 });
 
