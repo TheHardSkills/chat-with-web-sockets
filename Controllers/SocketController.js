@@ -16,6 +16,6 @@ exports.handleConnection = (connection) => {
     connection.emit("message", msg);
     connection.broadcast.emit("message", msg);
     //запись сбщ в бд
-    messageDataProvider.createOneMessage(msg, senderUsername, currentTime);
+    messageDataProvider.createOneMessage(msg, senderUsername, currentTime());
   });
 };

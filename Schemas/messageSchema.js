@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 const messageSchema = new mongoose.Schema({
-  message: {
+  messageText: {
     type: String,
     required: true,
     maxlength: 200,
