@@ -5,6 +5,9 @@ class MessagesService {
     let message = new Message({ messageText, senderUsername, addTime });
     return message.save();
   }
+  getAllMessages() {
+    return Message.find().exec();
+  }
 }
 
 module.exports = MessagesService;

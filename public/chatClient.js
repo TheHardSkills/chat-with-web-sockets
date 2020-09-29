@@ -17,6 +17,13 @@ socket.on("message", (msg) => {
   mssgBlckCreator(msg);
 });
 
+//todo: with map
+// socket.on("download message history", (allMessages) => {
+//   allMessages.map((oneMsg) => {
+//     mssgBlckCreator(oneMsg.messageText);
+//   });
+// });
+
 const sendUserMessage = () => {
   const messageText = document.getElementById("inputWithMessageFromClient")
     .value;
