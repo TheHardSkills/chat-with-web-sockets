@@ -8,3 +8,7 @@ exports.jwtGenerator = (payload) => {
     expiresIn: "24h",
   });
 };
+
+exports.jwtDecoder = (token) => {
+  return jwt.verify(token, secretKey);
+};

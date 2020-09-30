@@ -1,4 +1,5 @@
-const socket = io("http://localhost:3000/?token=sdfsdffdsfdssdf");
+let currentToken = localStorage.getItem("token");
+const socket = io(`http://localhost:3000/?token=${currentToken}`); //?token=${currentToken}
 
 socket.on("connection", () => {
   console.log("We are connection");
@@ -15,6 +16,9 @@ const mssgBlckCreator = (mssgTxt) => {
 
 socket.on("message", (msg) => {
   mssgBlckCreator(msg);
+});
+socket.on("disconnect", () => {
+  document.location = "http://localhost:8000/";
 });
 
 //todo: with map

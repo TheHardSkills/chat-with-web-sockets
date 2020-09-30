@@ -10,6 +10,10 @@ class UsersService {
   findOneUserByFilter(filter) {
     return User.findOne(filter).exec();
   }
+
+  findUserById(id) {
+    return User.findById(id).exec();
+  }
 }
 
 module.exports = UsersService;
