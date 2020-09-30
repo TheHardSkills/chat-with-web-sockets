@@ -2,13 +2,18 @@
 <html>
   <head>
     <title>Chat on websockets</title>
+    <link rel="stylesheet" href="style.css" />
   </head>
   <body>
     <div id="loginForm">
       <form id="formLogIn" onsubmit="return false">
         <input id="usernameField" placeholder="username" />
         <input id="passwordField" placeholder="password" type="password" />
-        <button class="button" onclick="sendRequestWithUserData()">
+        <button
+          class="button"
+          id="signInBttn"
+          onclick="sendRequestWithUserData()"
+        >
           Sign in
         </button>
       </form>

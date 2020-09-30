@@ -9,6 +9,7 @@ const handleConnection = socketController.handleConnection;
 mongoose.connect("mongodb://localhost:27017/chat_db", {
   useNewUrlParser: true,
   useUnifiedTopology: true,
+  useFindAndModify: false,
 });
 
 const app = express();

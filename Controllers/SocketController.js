@@ -33,21 +33,45 @@ exports.handleConnection = async (connection) => {
     connection.emit("muted");
     //проверка на беке на мьют - нельзя записывать сбщ
   }
+  const allUsers = await userDataProvider.getAllUsers();
 
+  if (userInformation.adminStatus) {
+    connection.emit("show all users", allUsers);
+  }
   const username = decodedToken.username;
 
-  const allMessages = await messageDataProvider.getAllMessages();
-  // console.log("allMessages", allMessages);
+  let onlineStatus = userInformation.isOnline;
+  await userDataProvider.findUserAndUpdate(
+    { username },
+    { isOnline: !onlineStatus }
+  );
 
+  const allOnlineUsers = await userDataProvider.findAllUserByFilter({
+    isOnline: true,
+  });
+  console.log("allOnlineUsers", allOnlineUsers);
+
+  const allOnlnUsrsArr = allOnlineUsers.map((oneUserInfo) => {
+    return oneUserInfo.username;
+  });
+  connection.emit("user online", allOnlnUsrsArr);
+  connection.broadcast.emit("user online", allOnlnUsrsArr);
+
+  const allMessages = await messageDataProvider.getAllMessages();
   connection.emit("download message history", allMessages);
   connection.broadcast.emit("download message history", allMessages);
 
   connection.on("chat message", (msg) => {
-    // {msg, username}
-    // дополнить сообщение перед отправкой клиенту датой и именем автора:
-    connection.emit("message", msg);
-    connection.broadcast.emit("message", msg);
-    // запись сбщ в бд
+    connection.emit("message", {
+      messageText: msg,
+      senderUsername: username,
+      addTime: currentTime(),
+    });
+    connection.broadcast.emit("message", {
+      messageText: msg,
+      senderUsername: username,
+      addTime: currentTime(),
+    });
     messageDataProvider.createOneMessage(msg, username, currentTime());
   });
 };

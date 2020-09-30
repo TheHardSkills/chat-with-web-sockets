@@ -1,0 +1,117 @@
+@import url("https://fonts.googleapis.com/css2?family=Orbitron&display=swap");
+
+body {
+  background-color: #202020;
+  /* background-color: #3a3937; */
+  font-family: "Orbitron", sans-serif;
+}
+
+input {
+  text-align: center;
+  font-family: "Orbitron", sans-serif;
+  border-radius: 50px;
+  padding: 10px;
+}
+
+button {
+  background-color: #b0c4de;
+  text-align: center;
+  font-family: "Orbitron", sans-serif;
+  border-radius: 50px;
+  padding: 10px 30px 10px 30px;
+}
+
+#formLogIn {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+#allMessageBlock {
+  margin-top: 20px;
+  padding-left: 30px;
+  border: 1px solid green;
+  padding-bottom: 10px;
+  border-radius: 20px;
+  width: 60%;
+  display: inline-block;
+}
+
+.oneMessageBlock {
+  font-family: "Orbitron", sans-serif;
+  padding: 10px;
+  margin-top: 1.5%;
+  /* background-color: #b0c4de; */
+  /* color: #202020; */
+
+  background-color: #302f2f;
+  color: orange;
+  font-size: large;
+  width: 75%;
+  border-radius: 20px;
+  padding-left: 40px;
+}
+
+.usernameBlock {
+  font-size: x-small;
+  margin-top: 3%;
+  font-weight: 800;
+  width: 30px;
+}
+
+.messageSendingTimeBlock {
+  font-size: x-small;
+  margin-right: 3%;
+  font-weight: 800;
+  width: 10%;
+  margin-left: 70%;
+}
+
+#infoContainer {
+  float: right;
+  width: 30%;
+}
+
+#onlineUsersBlock {
+  margin-top: 5%;
+  color: #b0c4de;
+  border: 1px solid orange;
+  border-radius: 20px;
+  width: 100%;
+  text-align: center;
+  display: inline-block;
+}
+
+ul {
+  text-align: left;
+}
+
+#allUsersBlock {
+  color: #b0c4de;
+  margin-top: 5%;
+  border: 1px solid orange;
+  border-radius: 20px;
+  width: 100%;
+  text-align: center;
+  display: inline-block;
+}
+
+#bttnContaineer {
+  margin-right: 20px;
+}
+
+#muteBttn {
+  font-family: "Orbitron", sans-serif;
+  background-color: rgb(127, 150, 179);
+  border-radius: 10px;
+  border: 1px solid black;
+}
+#banBttn {
+  font-family: "Orbitron", sans-serif;
+  background-color: rgb(206, 103, 103);
+  border-radius: 10px;
+  border: 1px solid black;
+}
+
+#signInBttn {
+  padding: 10px 50px 10px 50px !important;
+}

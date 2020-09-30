@@ -3,7 +3,6 @@ const User = require("../Models/userModel");
 class UsersService {
   createOneUser(username, password) {
     let user = new User({ username, password });
-
     return user.save();
   }
 
@@ -11,8 +10,21 @@ class UsersService {
     return User.findOne(filter).exec();
   }
 
+  findAllUserByFilter(filter) {
+    //err
+    return User.find({ filter });
+  }
+
   findUserById(id) {
     return User.findById(id).exec();
+  }
+
+  getAllUsers() {
+    return User.find({});
+  }
+
+  findUserAndUpdate(samplingСriterion, updateParameter) {
+    return User.findOneAndUpdate(samplingСriterion, updateParameter);
   }
 }
 
