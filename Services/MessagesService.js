@@ -6,7 +6,7 @@ class MessagesService {
     return message.save();
   }
   getAllMessages() {
-    return Message.find().exec();
+    return Message.find({});
   }
 }
 

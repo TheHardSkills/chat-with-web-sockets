@@ -10,36 +10,37 @@ const jwtDecoder = userAutentification.jwtDecoder;
 const timeService = require("../Services/TimeService");
 const currentTime = timeService.getCurrentTime;
 
-// const getAllMessages = async () => {
-//   return await messageDataProvider.getAllMessages();
-// };
-// console.log("getAllMessages", getAllMessages());
-
-//senderUsername
-
 exports.handleConnection = async (connection) => {
   const token = connection.handshake.query.token;
 
   // 1. verification
-  let decodedToken = jwtDecoder(token);
+  const decodedToken = jwtDecoder(token);
   if (!decodedToken) {
     connection.emit("disconnect");
     connection.disconnect();
   }
 
   // 2. get user id
-  let userInformation = await userDataProvider.findUserById(decodedToken.id);
+  const userInformation = await userDataProvider.findUserById(decodedToken.id);
 
   // 3. check banned status
   if (userInformation.onBan) {
     connection.emit("disconnect");
     connection.disconnect();
   }
-  // if any false - disconnect
+
+  if (userInformation.onMute) {
+    connection.emit("muted");
+    //проверка на беке на мьют - нельзя записывать сбщ
+  }
 
   const username = decodedToken.username;
-  // connection.emit("download message history", getAllMessages);
-  // connection.broadcast.emit("download message history", getAllMessages);
+
+  const allMessages = await messageDataProvider.getAllMessages();
+  // console.log("allMessages", allMessages);
+
+  connection.emit("download message history", allMessages);
+  connection.broadcast.emit("download message history", allMessages);
 
   connection.on("chat message", (msg) => {
     // {msg, username}

@@ -1,5 +1,5 @@
 let currentToken = localStorage.getItem("token");
-const socket = io(`http://localhost:3000/?token=${currentToken}`); //?token=${currentToken}
+const socket = io(`http://localhost:3000/?token=${currentToken}`);
 
 socket.on("connection", () => {
   console.log("We are connection");
@@ -21,12 +21,18 @@ socket.on("disconnect", () => {
   document.location = "http://localhost:8000/";
 });
 
+socket.on("muted", () => {
+  console.log("mute");
+  const sendMessagePanel = document.getElementById("sendMessagePanel");
+  sendMessagePanel.remove();
+});
+
 //todo: with map
-// socket.on("download message history", (allMessages) => {
-//   allMessages.map((oneMsg) => {
-//     mssgBlckCreator(oneMsg.messageText);
-//   });
-// });
+socket.on("download message history", (allMessages) => {
+  allMessages.map((oneMsg) => {
+    mssgBlckCreator(oneMsg.messageText);
+  });
+});
 
 const sendUserMessage = () => {
   const messageText = document.getElementById("inputWithMessageFromClient")
