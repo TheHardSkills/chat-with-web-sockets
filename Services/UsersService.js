@@ -4,6 +4,8 @@ class UsersService {
   createOneUser(username, password) {
     let user = new User({ username, password });
     return user.save();
+
+    // return (new User({ username, password })).save();
   }
 
   findOneUserByFilter(filter) {

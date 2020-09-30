@@ -24,7 +24,7 @@ exports.handleConnection = async (connection) => {
   const userInformation = await userDataProvider.findUserById(decodedToken.id);
 
   // 3. check banned status
-  if (userInformation.onBan) {
+  if (!userInformation || userInformation.onBan) {
     connection.emit("disconnect");
     connection.disconnect();
   }
@@ -41,10 +41,7 @@ exports.handleConnection = async (connection) => {
   const username = decodedToken.username;
 
   let onlineStatus = userInformation.isOnline;
-  await userDataProvider.findUserAndUpdate(
-    { username },
-    { isOnline: !onlineStatus }
-  );
+  await userDataProvider.findUserAndUpdate({ username }, { isOnline: true });
 
   const allOnlineUsers = await userDataProvider.findAllUserByFilter({
     isOnline: true,
@@ -62,6 +59,8 @@ exports.handleConnection = async (connection) => {
   connection.broadcast.emit("download message history", allMessages);
 
   connection.on("chat message", (msg) => {
+    // check 15sec and mute status
+    // .....
     connection.emit("message", {
       messageText: msg,
       senderUsername: username,

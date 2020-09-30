@@ -5,7 +5,6 @@ socket.on("connection", () => {
   console.log("We are connection");
 });
 
-// todo: move to View folder ?
 const mssgBlckCreator = (mssgTxt, time, author) => {
   const allMssgBlck = document.getElementById("allMessageBlock");
   const oneMessageBlock = document.createElement("div");
