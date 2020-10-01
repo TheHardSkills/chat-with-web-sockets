@@ -40,13 +40,11 @@ exports.handleConnection = async (connection) => {
   }
   const username = decodedToken.username;
 
-  let onlineStatus = userInformation.isOnline;
   await userDataProvider.findUserAndUpdate({ username }, { isOnline: true });
 
   const allOnlineUsers = await userDataProvider.findAllUserByFilter({
     isOnline: true,
   });
-  console.log("allOnlineUsers", allOnlineUsers);
 
   const allOnlnUsrsArr = allOnlineUsers.map((oneUserInfo) => {
     return oneUserInfo.username;
@@ -61,16 +59,34 @@ exports.handleConnection = async (connection) => {
   connection.on("chat message", (msg) => {
     // check 15sec and mute status
     // .....
+
+    const time = currentTime();
     connection.emit("message", {
       messageText: msg,
       senderUsername: username,
-      addTime: currentTime(),
+      addTime: time,
     });
     connection.broadcast.emit("message", {
       messageText: msg,
       senderUsername: username,
-      addTime: currentTime(),
+      addTime: time,
     });
-    messageDataProvider.createOneMessage(msg, username, currentTime());
+    messageDataProvider.createOneMessage(msg, username, time);
+  });
+
+  connection.on("disconnect", async () => {
+    //изменить статус онлайн
+    //отправить новые данные в онлайн юзер на клиент
+
+    await userDataProvider.findUserAndUpdate({ username }, { isOnline: false });
+
+    const allOnlineUsers = await userDataProvider.findAllUserByFilter({
+      isOnline: true,
+    });
+    const allOnlnUsrsArr = allOnlineUsers.map((oneUserInfo) => {
+      return oneUserInfo.username;
+    });
+    connection.emit("user online", allOnlnUsrsArr);
+    connection.broadcast.emit("user online", allOnlnUsrsArr);
   });
 };

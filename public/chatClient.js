@@ -51,7 +51,12 @@ const usersListCreator = (username) => {
   li.innerText = username;
   allUsersList.append(li);
 };
-
+const listRemover = (listId) => {
+  if (document.getElementById(listId)) {
+    let list = document.getElementById(listId);
+    list.remove();
+  }
+};
 const onlineUsrLstCreator = (username) => {
   const onlineUsersBlock = document.getElementById("onlineUsersBlock");
   if (!document.getElementById("allOnlneUsrsLst")) {
@@ -100,6 +105,7 @@ socket.on("show all users", (allUsers) => {
 });
 
 socket.on("user online", (allOnlnUsrsArr) => {
+  listRemover("allOnlneUsrsLst");
   allOnlnUsrsArr.map((oneOnlnUsrnm) => {
     onlineUsrLstCreator(oneOnlnUsrnm);
   });

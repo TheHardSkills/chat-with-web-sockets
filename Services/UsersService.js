@@ -14,7 +14,7 @@ class UsersService {
 
   findAllUserByFilter(filter) {
     //err
-    return User.find({ filter });
+    return User.find(filter).exec();
   }
 
   findUserById(id) {
