@@ -2,6 +2,13 @@ const sendRequestWithUserData = async () => {
   let username = document.getElementById("usernameField").value;
   let password = document.getElementById("passwordField").value;
 
+  const format = /[ `!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/;
+  const resultUsernameCheck = format.test(username);
+  if (resultUsernameCheck) {
+    alert("Username cannot contain special characters");
+    return;
+  }
+
   const result = await fetch("http://localhost:8000/login", {
     method: "POST",
     headers: {

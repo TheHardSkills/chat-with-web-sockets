@@ -12,44 +12,50 @@ class LoginController {
   }
 
   async userCreation(username, password) {
-    const resultObject = { error: "", token: "" };
-    let finderUser = await userDataProvider.findOneUserByFilter({ username });
+    const format = /[ `!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/;
+    const resultUsernameCheck = format.test(username);
+    if (!resultUsernameCheck) {
+      const resultObject = { error: "", token: "" };
+      const finderUser = await userDataProvider.findOneUserByFilter({
+        username,
+      });
 
-    if (finderUser) {
-      if (passwordHash.verify(password, finderUser.password)) {
-        const token = jwtGenerator({
-          adminStatus: finderUser.adminStatus,
-          onMute: finderUser.onMute,
-          username: finderUser.username,
-          id: finderUser.id,
-        });
+      if (finderUser) {
+        if (passwordHash.verify(password, finderUser.password)) {
+          const token = jwtGenerator({
+            adminStatus: finderUser.adminStatus,
+            onMute: finderUser.onMute,
+            username: finderUser.username,
+            id: finderUser.id,
+          });
+
+          return {
+            ...resultObject,
+            token,
+          };
+        }
 
         return {
           ...resultObject,
-          token,
+          error: "Incorrect password",
         };
       }
+      let newUser = await userDataProvider.createOneUser(
+        username,
+        passwordHash.generate(password)
+      );
+      const token = jwtGenerator({
+        adminStatus: newUser.adminStatus,
+        onMute: newUser.onMute,
+        username: newUser.username,
+        id: newUser.id,
+      });
 
       return {
         ...resultObject,
-        error: "Incorrect password",
+        token,
       };
     }
-    let newUser = await userDataProvider.createOneUser(
-      username,
-      passwordHash.generate(password)
-    );
-    const token = jwtGenerator({
-      adminStatus: newUser.adminStatus,
-      onMute: newUser.onMute,
-      username: newUser.username,
-      id: newUser.id,
-    });
-
-    return {
-      ...resultObject,
-      token,
-    };
   }
 }
 
