@@ -93,8 +93,8 @@ exports.handleConnection = async (connection) => {
     console.log("username", userInformation.username);
     console.log("userInformation.onMute", userInformation.onMute);
 
-    if (!userInformation.onMute) {
-      //|| !userInformation.onBan
+    if (!(userInformation.onMute || userInformation.onBan)) {
+      //?
       //добавить в токен onBan
       const time = currentTime();
       connection.emit("message", {
