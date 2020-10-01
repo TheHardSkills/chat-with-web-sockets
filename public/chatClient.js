@@ -11,6 +11,13 @@ const idKeeper = (username, userId) => {
 };
 console.log("allUsersObj", allUsersObj);
 
+//del start
+const allMsgBlck = () => {
+  const allMessageBlock = document.createElement("div");
+  allMessageBlock.id = "allMessageBlock";
+};
+//del end
+
 const mssgBlckCreator = (mssgTxt, time, author) => {
   const allMssgBlck = document.getElementById("allMessageBlock");
   const oneMessageBlock = document.createElement("div");
@@ -124,6 +131,7 @@ const banUser = (banUserId) => {
 };
 
 socket.on("message", (msgInfo) => {
+  // listRemover("allMessageBlock");
   mssgBlckCreator(msgInfo.messageText, msgInfo.addTime, msgInfo.senderUsername);
 });
 socket.on("disconnect", () => {
@@ -143,6 +151,7 @@ socket.on("download message history", (allMessages) => {
 });
 
 socket.on("show all users", (allUsers) => {
+  listRemover("allUsersBlock");
   allUsrsBlckCreator();
   allUsers.map(({ _id, username, onMute, onBan, adminStatus }) => {
     usersListCreator(username, onMute, onBan, adminStatus);

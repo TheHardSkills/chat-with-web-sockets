@@ -10,6 +10,7 @@ const jwtDecoder = userAutentification.jwtDecoder;
 const timeService = require("../Services/TimeService");
 const currentTime = timeService.getCurrentTime;
 
+// exports.handleConnection = (io) => async (connection) => {
 exports.handleConnection = async (connection) => {
   const token = connection.handshake.query.token;
 
@@ -47,6 +48,8 @@ exports.handleConnection = async (connection) => {
         { username: userInformation.username },
         { onMute: !onMute }
       );
+      const allUsers = await userDataProvider.getAllUsers();
+      connection.emit("show all users", allUsers);
     }
   });
 
@@ -58,6 +61,9 @@ exports.handleConnection = async (connection) => {
         { username: userInformation.username },
         { onBan: !onBan }
       );
+
+      const allUsers = await userDataProvider.getAllUsers();
+      connection.emit("show all users", allUsers);
     }
   });
 
@@ -77,24 +83,25 @@ exports.handleConnection = async (connection) => {
 
   const allMessages = await messageDataProvider.getAllMessages();
   connection.emit("download message history", allMessages);
-  connection.broadcast.emit("download message history", allMessages);
 
   connection.on("chat message", (msg) => {
     // check 15sec and mute status
     // .....
-
-    const time = currentTime();
-    connection.emit("message", {
-      messageText: msg,
-      senderUsername: username,
-      addTime: time,
-    });
-    connection.broadcast.emit("message", {
-      messageText: msg,
-      senderUsername: username,
-      addTime: time,
-    });
-    messageDataProvider.createOneMessage(msg, username, time);
+    if (!decodedToken.onMute || !decodedToken.onBan) {
+      //добавить в токен onBan
+      const time = currentTime();
+      connection.emit("message", {
+        messageText: msg,
+        senderUsername: username,
+        addTime: time,
+      });
+      connection.broadcast.emit("message", {
+        messageText: msg,
+        senderUsername: username,
+        addTime: time,
+      });
+      messageDataProvider.createOneMessage(msg, username, time);
+    }
   });
 
   connection.on("disconnect", async () => {
