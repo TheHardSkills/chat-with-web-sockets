@@ -40,29 +40,25 @@ exports.handleConnection = async (connection) => {
   }
 
   connection.on("mute", async (userId) => {
-    //проверка что команда послана от админа
-    //по токену
-
-    // найти юзера по id, замутить его в бд и в чате
-    const userInformation = await userDataProvider.findUserById(userId);
-    let onMute = userInformation.onMute;
-    await userDataProvider.findUserAndUpdate(
-      { username: userInformation.username },
-      { onMute: !onMute }
-    );
+    if (decodedToken.adminStatus) {
+      const userInformation = await userDataProvider.findUserById(userId);
+      let onMute = userInformation.onMute;
+      await userDataProvider.findUserAndUpdate(
+        { username: userInformation.username },
+        { onMute: !onMute }
+      );
+    }
   });
 
   connection.on("ban", async (userId) => {
-    //проверка что команда послана от админа
-    //по токену
-
-    // найти юзера по id, замутить его в бд и в чате
-    const userInformation = await userDataProvider.findUserById(userId);
-    let onBan = userInformation.onBan;
-    await userDataProvider.findUserAndUpdate(
-      { username: userInformation.username },
-      { onBan: !onBan }
-    );
+    if (decodedToken.adminStatus) {
+      const userInformation = await userDataProvider.findUserById(userId);
+      let onBan = userInformation.onBan;
+      await userDataProvider.findUserAndUpdate(
+        { username: userInformation.username },
+        { onBan: !onBan }
+      );
+    }
   });
 
   const username = decodedToken.username;

@@ -45,7 +45,7 @@ const allUsrsBlckCreator = () => {
   allUsersBlock.append(blockHeader);
   infoContainer.append(allUsersBlock);
 };
-const usersListCreator = (username) => {
+const usersListCreator = (username, muteStatus, banStatus, adminStatus) => {
   const allUsersBlock = document.getElementById("allUsersBlock");
   if (!document.getElementById("allUsersList")) {
     const ul = document.createElement("ul");
@@ -55,30 +55,39 @@ const usersListCreator = (username) => {
   const allUsersList = document.getElementById("allUsersList");
   const li = document.createElement("li");
   li.innerText = username;
+  if (!adminStatus) {
+    const muteBttn = document.createElement("button");
+    let muteBttnValue = "Mute";
+    if (muteStatus) {
+      muteBttnValue = "Unmute";
+    }
+    muteBttn.innerText = muteBttnValue;
+    muteBttn.className = "muteBttn";
+    muteBttn.onclick = () => {
+      const liText = li.innerText;
+      console.log(liText);
+      const liInfo = liText.split(muteBttnValue);
+      const userId = allUsersObj[liInfo[0]];
+      muteUser(userId);
+    };
 
-  const muteBttn = document.createElement("button");
-  muteBttn.innerText = "Mute";
-  muteBttn.className = "muteBttn";
-  muteBttn.onclick = () => {
-    const liText = li.innerText;
-    console.log(liText);
-    const liInfo = liText.split("Mute");
-    const userId = allUsersObj[liInfo[0]];
-    muteUser(userId);
-  };
+    const banBttn = document.createElement("button");
+    let banBttnValue = "Ban";
+    if (banStatus) {
+      banBttnValue = "Unban";
+    }
+    banBttn.innerText = banBttnValue;
+    banBttn.className = "banBttn";
+    banBttn.onclick = () => {
+      const liText = li.innerText;
+      const liInfo = liText.split(muteBttnValue);
+      const userId = allUsersObj[liInfo[0]];
+      banUser(userId);
+    };
 
-  const banBttn = document.createElement("button");
-  banBttn.innerText = "Ban";
-  banBttn.className = "banBttn";
-  banBttn.onclick = () => {
-    const liText = li.innerText;
-    const liInfo = liText.split("Mute");
-    const userId = allUsersObj[liInfo[0]];
-    banUser(userId);
-  };
-
-  li.append(muteBttn);
-  li.append(banBttn);
+    li.append(muteBttn);
+    li.append(banBttn);
+  }
   allUsersList.append(li);
 };
 const listRemover = (listId) => {
@@ -135,9 +144,9 @@ socket.on("download message history", (allMessages) => {
 
 socket.on("show all users", (allUsers) => {
   allUsrsBlckCreator();
-  allUsers.map((oneUser) => {
-    usersListCreator(oneUser.username);
-    idKeeper(oneUser.username, oneUser["_id"]);
+  allUsers.map(({ _id, username, onMute, onBan, adminStatus }) => {
+    usersListCreator(username, onMute, onBan, adminStatus);
+    idKeeper(username, _id);
   });
 });
 
