@@ -33,11 +33,38 @@ exports.handleConnection = async (connection) => {
     connection.emit("muted");
     //проверка на беке на мьют - нельзя записывать сбщ
   }
-  const allUsers = await userDataProvider.getAllUsers();
 
   if (userInformation.adminStatus) {
+    const allUsers = await userDataProvider.getAllUsers();
     connection.emit("show all users", allUsers);
   }
+
+  connection.on("mute", async (userId) => {
+    //проверка что команда послана от админа
+    //по токену
+
+    // найти юзера по id, замутить его в бд и в чате
+    const userInformation = await userDataProvider.findUserById(userId);
+    let onMute = userInformation.onMute;
+    await userDataProvider.findUserAndUpdate(
+      { username: userInformation.username },
+      { onMute: !onMute }
+    );
+  });
+
+  connection.on("ban", async (userId) => {
+    //проверка что команда послана от админа
+    //по токену
+
+    // найти юзера по id, замутить его в бд и в чате
+    const userInformation = await userDataProvider.findUserById(userId);
+    let onBan = userInformation.onBan;
+    await userDataProvider.findUserAndUpdate(
+      { username: userInformation.username },
+      { onBan: !onBan }
+    );
+  });
+
   const username = decodedToken.username;
 
   await userDataProvider.findUserAndUpdate({ username }, { isOnline: true });
@@ -75,9 +102,6 @@ exports.handleConnection = async (connection) => {
   });
 
   connection.on("disconnect", async () => {
-    //изменить статус онлайн
-    //отправить новые данные в онлайн юзер на клиент
-
     await userDataProvider.findUserAndUpdate({ username }, { isOnline: false });
 
     const allOnlineUsers = await userDataProvider.findAllUserByFilter({

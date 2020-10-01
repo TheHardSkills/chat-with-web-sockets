@@ -115,3 +115,15 @@ ul {
 #signInBttn {
   padding: 10px 50px 10px 50px !important;
 }
+
+.muteBttn {
+  margin-top: 1%;
+
+  margin-left: 20%;
+  display: inline-block;
+}
+
+.banBttn {
+  margin-top: 1%;
+  display: inline-block;
+}

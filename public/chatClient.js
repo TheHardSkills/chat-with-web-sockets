@@ -5,6 +5,12 @@ socket.on("connection", () => {
   console.log("We are connection");
 });
 
+let allUsersObj = {};
+const idKeeper = (username, userId) => {
+  allUsersObj[username] = userId;
+};
+console.log("allUsersObj", allUsersObj);
+
 const mssgBlckCreator = (mssgTxt, time, author) => {
   const allMssgBlck = document.getElementById("allMessageBlock");
   const oneMessageBlock = document.createElement("div");
@@ -49,6 +55,30 @@ const usersListCreator = (username) => {
   const allUsersList = document.getElementById("allUsersList");
   const li = document.createElement("li");
   li.innerText = username;
+
+  const muteBttn = document.createElement("button");
+  muteBttn.innerText = "Mute";
+  muteBttn.className = "muteBttn";
+  muteBttn.onclick = () => {
+    const liText = li.innerText;
+    console.log(liText);
+    const liInfo = liText.split("Mute");
+    const userId = allUsersObj[liInfo[0]];
+    muteUser(userId);
+  };
+
+  const banBttn = document.createElement("button");
+  banBttn.innerText = "Ban";
+  banBttn.className = "banBttn";
+  banBttn.onclick = () => {
+    const liText = li.innerText;
+    const liInfo = liText.split("Mute");
+    const userId = allUsersObj[liInfo[0]];
+    banUser(userId);
+  };
+
+  li.append(muteBttn);
+  li.append(banBttn);
   allUsersList.append(li);
 };
 const listRemover = (listId) => {
@@ -76,8 +106,15 @@ const sendUserMessage = () => {
   socket.emit("chat message", messageText);
 };
 
+const muteUser = (muteUserId) => {
+  socket.emit("mute", muteUserId);
+};
+
+const banUser = (banUserId) => {
+  socket.emit("ban", banUserId);
+};
+
 socket.on("message", (msgInfo) => {
-  //добавить данные о времени и авторе
   mssgBlckCreator(msgInfo.messageText, msgInfo.addTime, msgInfo.senderUsername);
 });
 socket.on("disconnect", () => {
@@ -97,10 +134,10 @@ socket.on("download message history", (allMessages) => {
 });
 
 socket.on("show all users", (allUsers) => {
-  // todo: move to back obj parse
   allUsrsBlckCreator();
   allUsers.map((oneUser) => {
     usersListCreator(oneUser.username);
+    idKeeper(oneUser.username, oneUser["_id"]);
   });
 });
 
