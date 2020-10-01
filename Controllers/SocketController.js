@@ -84,10 +84,17 @@ exports.handleConnection = async (connection) => {
   const allMessages = await messageDataProvider.getAllMessages();
   connection.emit("download message history", allMessages);
 
-  connection.on("chat message", (msg) => {
+  connection.on("chat message", async (msg) => {
+    console.log("msg", msg);
     // check 15sec and mute status
     // .....
-    if (!decodedToken.onMute || !decodedToken.onBan) {
+    const userId = decodedToken.id;
+    const userInformation = await userDataProvider.findUserById(userId);
+    console.log("username", userInformation.username);
+    console.log("userInformation.onMute", userInformation.onMute);
+
+    if (!userInformation.onMute) {
+      //|| !userInformation.onBan
       //добавить в токен onBan
       const time = currentTime();
       connection.emit("message", {
