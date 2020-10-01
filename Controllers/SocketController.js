@@ -9,6 +9,7 @@ const jwtDecoder = userAutentification.jwtDecoder;
 
 const timeService = require("../Services/TimeService");
 const currentTime = timeService.getCurrentTime;
+// const usersMap = {};
 
 // exports.handleConnection = (io) => async (connection) => {
 exports.handleConnection = async (connection) => {
@@ -39,6 +40,9 @@ exports.handleConnection = async (connection) => {
     const allUsers = await userDataProvider.getAllUsers();
     connection.emit("show all users", allUsers);
   }
+
+  // connection.user = userInformation; //нарушает имутабельность
+  // usersMap[connection.id] = userInformation;
 
   connection.on("mute", async (userId) => {
     if (decodedToken.adminStatus) {
@@ -95,7 +99,6 @@ exports.handleConnection = async (connection) => {
 
     if (!(userInformation.onMute || userInformation.onBan)) {
       //?
-      //добавить в токен onBan
       const time = currentTime();
       connection.emit("message", {
         messageText: msg,
@@ -112,6 +115,8 @@ exports.handleConnection = async (connection) => {
   });
 
   connection.on("disconnect", async () => {
+    // delete usersMap[connection.id];
+
     await userDataProvider.findUserAndUpdate({ username }, { isOnline: false });
 
     const allOnlineUsers = await userDataProvider.findAllUserByFilter({
