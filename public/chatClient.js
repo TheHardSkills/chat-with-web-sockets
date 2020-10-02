@@ -121,6 +121,14 @@ const onlineUsrLstCreator = (username) => {
 const sendUserMessage = () => {
   const messageText = document.getElementById("inputWithMessageFromClient")
     .value;
+  if (messageText.length < 1) {
+    alert("Write a message");
+    return;
+  }
+  if (messageText.length >= 200) {
+    alert("The message cannot exceed 200 characters");
+    return;
+  }
   socket.emit("chat message", messageText);
 };
 

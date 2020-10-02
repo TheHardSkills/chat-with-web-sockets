@@ -27,6 +27,13 @@ class UsersService {
   findUserAndUpdate(samplingСriterion, updateParameter) {
     return User.findOneAndUpdate(samplingСriterion, updateParameter);
   }
+
+  triggerMute(id) {
+    return this.findUserById(id).then((user) => {
+      return User.findOneAndUpdate({ id }, { onMute: !user.onMute });
+    });
+    // return User.findOneAndUpdate({id}, {onMute});
+  }
 }
 
 module.exports = UsersService;

@@ -40,8 +40,19 @@ exports.handleConnection = (io) => async (connection) => {
 
   connection.user = userInformation;
 
+  // connection.on("unmute", async (userId) => {
+  //   if (decodedToken.adminStatus) {
+
+  //     await userDataProvider.findUserAndUpdate(
+  //       { id: userId },
+  //       { onMute: false }
+  //     );
+  // }});
+
   connection.on("mute", async (userId) => {
     if (decodedToken.adminStatus) {
+      // await userDataProvider.triggerMute(userId);
+
       const userInformation = await userDataProvider.findUserById(userId);
       let onMute = userInformation.onMute;
       await userDataProvider.findUserAndUpdate(
@@ -51,18 +62,28 @@ exports.handleConnection = (io) => async (connection) => {
       const allUsers = await userDataProvider.getAllUsers();
       connection.emit("show all users", allUsers);
 
-      let allConnectedId = Object.keys(io.sockets.connected);
-      for (let i = 0; i < allConnectedId.length; i++) {
-        let connId = allConnectedId[i];
-        if (userId == io.sockets.connected[connId].user._id) {
-          let connectionId = io.sockets.connected[connId].id;
-          if (!onMute) {
-            io.sockets.connected[connectionId].emit("muted");
-          } else {
-            io.sockets.connected[connectionId].emit("unmuted");
-          }
-        }
-      }
+      const targer = Object.values(io.sockets.connected).find(
+        (conn) => conn.user.id === userId
+      );
+
+      targer.emit(onMute ? "muted" : "unmuted");
+      // targer.emit('muted', {onMuted});
+
+      // let allConnectedId = Object.keys(io.sockets.connected);
+
+      // for (let i = 0; i < allConnectedId.length; i++) {
+      //   let connId = allConnectedId[i];
+
+      //   if (userId == io.sockets.connected[connId].user._id) {
+      //     let connectionId = io.sockets.connected[connId].id;
+
+      //     if (!onMute) {
+      //       io.sockets.connected[connectionId].emit("muted");
+      //     } else {
+      //       io.sockets.connected[connectionId].emit("unmuted");
+      //     }
+      //   }
+      // }
     }
   });
 
