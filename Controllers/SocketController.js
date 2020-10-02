@@ -51,6 +51,20 @@ exports.handleConnection = (io) => async (connection) => {
       );
       const allUsers = await userDataProvider.getAllUsers();
       connection.emit("show all users", allUsers);
+
+      let allConnectedId = Object.keys(io.sockets.connected);
+      for (let i = 0; i < allConnectedId.length; i++) {
+        let connId = allConnectedId[i];
+        if (userId == io.sockets.connected[connId].user._id) {
+          let connectionId = io.sockets.connected[connId].id;
+          //io.sockets.connected[connectionId].emit("muted");
+          if (!onMute) {
+            io.sockets.connected[connectionId].emit("muted");
+          } else {
+            io.sockets.connected[connectionId].emit("unmuted");
+          }
+        }
+      }
     }
   });
 
@@ -62,7 +76,6 @@ exports.handleConnection = (io) => async (connection) => {
         { username: userInformation.username },
         { onBan: !onBan }
       );
-
       const allUsers = await userDataProvider.getAllUsers();
       connection.emit("show all users", allUsers);
 

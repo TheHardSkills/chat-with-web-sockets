@@ -75,7 +75,9 @@ const usersListCreator = (username, muteStatus, banStatus, adminStatus) => {
       console.log(liText);
       const liInfo = liText.split(muteBttnValue);
       const userId = allUsersObj[liInfo[0]];
-      muteUser(userId);
+      muteUser(userId); // **
+      // let className = muteBttnValue.toLowerCase();
+      // sendMssgBttn.className=className;
     };
 
     const banBttn = document.createElement("button");
@@ -131,7 +133,6 @@ const banUser = (banUserId) => {
 };
 
 socket.on("message", (msgInfo) => {
-  // listRemover("allMessageBlock");
   mssgBlckCreator(msgInfo.messageText, msgInfo.addTime, msgInfo.senderUsername);
 });
 socket.on("disconnect", () => {
@@ -139,9 +140,13 @@ socket.on("disconnect", () => {
 });
 
 socket.on("muted", () => {
-  console.log("mute");
-  const sendMessagePanel = document.getElementById("sendMessagePanel");
-  sendMessagePanel.remove();
+  const sendMssgBttn = document.getElementById("sendMssgBttn");
+  sendMssgBttn.disabled = true;
+});
+
+socket.on("unmuted", () => {
+  const sendMssgBttn = document.getElementById("sendMssgBttn");
+  sendMssgBttn.disabled = false;
 });
 
 socket.on("download message history", (allMessages) => {
