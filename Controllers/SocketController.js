@@ -32,7 +32,6 @@ exports.handleConnection = (io) => async (connection) => {
 
   if (userInformation.onMute) {
     connection.emit("muted");
-    //проверка на беке на мьют - нельзя записывать сбщ
   }
 
   if (userInformation.adminStatus) {
@@ -40,8 +39,7 @@ exports.handleConnection = (io) => async (connection) => {
     connection.emit("show all users", allUsers);
   }
 
-  connection.user = userInformation; //нарушает имутабельность
-  // usersMap[connection.id] = userInformation;
+  connection.user = userInformation;
 
   connection.on("mute", async (userId) => {
     if (decodedToken.adminStatus) {
@@ -53,35 +51,7 @@ exports.handleConnection = (io) => async (connection) => {
       );
       const allUsers = await userDataProvider.getAllUsers();
       connection.emit("show all users", allUsers);
-      ///////
-
-      let allConnectedId = Object.keys(io.sockets.connected);
-      console.log("-----", allConnectedId);
-
-      console.log("allConnectedId", allConnectedId);
-      console.log("userId", userId);
-      // console.log("allConnectedId", io.sockets.connected);
-
-      //let user = users.find(item => item.id == 1);
-      for (let i = 0; i < allConnectedId.length; i++) {
-        let connId = allConnectedId[i];
-        //console.log(allConnectedId[i].user._id);
-        console.log(
-          "allConnectedId[connId]",
-          io.sockets.connected[connId].user._id
-        );
-
-        if (userId == io.sockets.connected[connId].user._id) {
-          console.log("userId", io.sockets.connected[connId].id);
-
-          console.log("Mute user name: ", connection.user.username);
-          console.log("connection id: ", connection.id);
-        }
-      }
     }
-    // console.log("*******", allConnectedId);
-
-    // console.log("connected", Object.keys(connection));
   });
 
   connection.on("ban", async (userId) => {
@@ -96,20 +66,11 @@ exports.handleConnection = (io) => async (connection) => {
       const allUsers = await userDataProvider.getAllUsers();
       connection.emit("show all users", allUsers);
 
-      //disconn
-      console.log("admin connection.id", connection.id);
       let allConnectedId = Object.keys(io.sockets.connected);
       for (let i = 0; i < allConnectedId.length; i++) {
         let connId = allConnectedId[i];
-
         if (userId == io.sockets.connected[connId].user._id) {
-          console.log("userId", io.sockets.connected[connId].id);
-          console.log(
-            "Ban user name: ",
-            io.sockets.connected[connId].user.username
-          );
           let connectionId = io.sockets.connected[connId].id;
-          console.log("connection id: ", connectionId);
           io.sockets.connected[connectionId].disconnect();
         }
       }
