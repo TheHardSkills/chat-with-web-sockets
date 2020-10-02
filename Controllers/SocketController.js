@@ -9,7 +9,6 @@ const jwtDecoder = userAutentification.jwtDecoder;
 
 const timeService = require("../Services/TimeService");
 const currentTime = timeService.getCurrentTime;
-// const usersMap = {};
 
 exports.handleConnection = (io) => async (connection) => {
   const token = connection.handshake.query.token;
@@ -57,7 +56,6 @@ exports.handleConnection = (io) => async (connection) => {
         let connId = allConnectedId[i];
         if (userId == io.sockets.connected[connId].user._id) {
           let connectionId = io.sockets.connected[connId].id;
-          //io.sockets.connected[connectionId].emit("muted");
           if (!onMute) {
             io.sockets.connected[connectionId].emit("muted");
           } else {
@@ -91,9 +89,7 @@ exports.handleConnection = (io) => async (connection) => {
   });
 
   const username = decodedToken.username;
-
   await userDataProvider.findUserAndUpdate({ username }, { isOnline: true });
-
   const allOnlineUsers = await userDataProvider.findAllUserByFilter({
     isOnline: true,
   });
@@ -108,34 +104,38 @@ exports.handleConnection = (io) => async (connection) => {
   connection.emit("download message history", allMessages);
 
   connection.on("chat message", async (msg) => {
-    console.log("msg", msg);
-    // check 15sec and mute status
-    // .....
     const userId = decodedToken.id;
     const userInformation = await userDataProvider.findUserById(userId);
-    console.log("username", userInformation.username);
-    console.log("userInformation.onMute", userInformation.onMute);
 
     if (!(userInformation.onMute || userInformation.onBan)) {
-      //?
-      const time = currentTime();
+      const allUsrMssg = await messageDataProvider.getAllMssgByFilter({
+        senderUsername: userInformation.username,
+      });
+
+      const timeMsg = currentTime();
+      if (allUsrMssg.length) {
+        let timestampLstMssg = Date.parse(allUsrMssg.pop().addTime);
+        let currentTimestamp = Date.parse(timeMsg);
+
+        if (timestampLstMssg + 15000 >= currentTimestamp) {
+          return;
+        }
+      }
       connection.emit("message", {
         messageText: msg,
         senderUsername: username,
-        addTime: time,
+        addTime: timeMsg,
       });
       connection.broadcast.emit("message", {
         messageText: msg,
         senderUsername: username,
-        addTime: time,
+        addTime: timeMsg,
       });
-      messageDataProvider.createOneMessage(msg, username, time);
+      messageDataProvider.createOneMessage(msg, username, timeMsg);
     }
   });
 
   connection.on("disconnect", async () => {
-    // delete usersMap[connection.id];
-
     await userDataProvider.findUserAndUpdate({ username }, { isOnline: false });
 
     const allOnlineUsers = await userDataProvider.findAllUserByFilter({

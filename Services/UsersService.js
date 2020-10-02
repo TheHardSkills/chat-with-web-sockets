@@ -13,7 +13,6 @@ class UsersService {
   }
 
   findAllUserByFilter(filter) {
-    //err
     return User.find(filter).exec();
   }
 

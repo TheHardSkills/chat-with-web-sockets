@@ -126,3 +126,7 @@ ul {
   margin-top: 1%;
   display: inline-block;
 }
+
+.mute {
+  disabled: "disabled";
+}

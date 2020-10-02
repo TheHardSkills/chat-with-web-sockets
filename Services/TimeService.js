@@ -12,6 +12,7 @@ exports.getCurrentTime = () => {
 
   const hh = currentDate.getHours();
   const min = currentDate.getMinutes();
+  const sc = currentDate.getSeconds();
 
-  return dd + "." + mm + "." + yy + " " + hh + ":" + min;
+  return dd + "." + mm + "." + yy + " " + hh + ":" + min + ":" + sc;
 };
