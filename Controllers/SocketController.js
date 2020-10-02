@@ -117,7 +117,9 @@ exports.handleConnection = (io) => async (connection) => {
         let timestampLstMssg = Date.parse(allUsrMssg.pop().addTime);
         let currentTimestamp = Date.parse(timeMsg);
 
+        console.log("timestampLstMssg", timestampLstMssg);
         if (timestampLstMssg + 15000 >= currentTimestamp) {
+          connection.emit("spammer");
           return;
         }
       }

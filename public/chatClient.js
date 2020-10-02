@@ -135,6 +135,11 @@ const banUser = (banUserId) => {
 socket.on("message", (msgInfo) => {
   mssgBlckCreator(msgInfo.messageText, msgInfo.addTime, msgInfo.senderUsername);
 });
+
+socket.on("spammer", () => {
+  alert("You can send messages no more than once every 15 seconds");
+});
+
 socket.on("disconnect", () => {
   document.location = "http://localhost:8000/";
 });
