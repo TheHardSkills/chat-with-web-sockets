@@ -31,7 +31,7 @@ app.listen(8000);
 const server = require("http").createServer(app);
 const io = require("socket.io")(server);
 
-// io.on("connection", handleConnection(io));
-io.on("connection", handleConnection);
+io.on("connection", handleConnection(io));
+//io.on("connection", handleConnection);
 
 server.listen(3000);
