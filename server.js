@@ -34,4 +34,4 @@ const io = require("socket.io")(server);
 io.on("connection", handleConnection(io));
 //io.on("connection", handleConnection);
 
-server.listen(3000);
+server.listen(3002);

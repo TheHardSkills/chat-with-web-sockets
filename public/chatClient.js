@@ -1,5 +1,5 @@
 let currentToken = localStorage.getItem("token");
-const socket = io(`http://localhost:3000/?token=${currentToken}`);
+const socket = io(`http://localhost:3002/?token=${currentToken}`);
 
 socket.on("connection", () => {
   console.log("We are connection");

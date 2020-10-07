@@ -66,24 +66,24 @@ exports.handleConnection = (io) => async (connection) => {
         (conn) => conn.user.id === userId
       );
 
-      targer.emit(onMute ? "muted" : "unmuted");
-      // targer.emit('muted', {onMuted});
+      //-targer.emit(onMute ? "muted" : "unmuted");
+      //-targer.emit('muted', {onMuted});
 
-      // let allConnectedId = Object.keys(io.sockets.connected);
+      let allConnectedId = Object.keys(io.sockets.connected);
 
-      // for (let i = 0; i < allConnectedId.length; i++) {
-      //   let connId = allConnectedId[i];
+      for (let i = 0; i < allConnectedId.length; i++) {
+        let connId = allConnectedId[i];
 
-      //   if (userId == io.sockets.connected[connId].user._id) {
-      //     let connectionId = io.sockets.connected[connId].id;
+        if (userId == io.sockets.connected[connId].user._id) {
+          let connectionId = io.sockets.connected[connId].id;
 
-      //     if (!onMute) {
-      //       io.sockets.connected[connectionId].emit("muted");
-      //     } else {
-      //       io.sockets.connected[connectionId].emit("unmuted");
-      //     }
-      //   }
-      // }
+          if (!onMute) {
+            io.sockets.connected[connectionId].emit("muted");
+          } else {
+            io.sockets.connected[connectionId].emit("unmuted");
+          }
+        }
+      }
     }
   });
 
@@ -121,9 +121,6 @@ exports.handleConnection = (io) => async (connection) => {
   connection.emit("user online", allOnlnUsrsArr);
   connection.broadcast.emit("user online", allOnlnUsrsArr);
 
-  const allMessages = await messageDataProvider.getAllMessages();
-  connection.emit("download message history", allMessages);
-
   connection.on("chat message", async (msg) => {
     const userId = decodedToken.id;
     const userInformation = await userDataProvider.findUserById(userId);
@@ -138,11 +135,11 @@ exports.handleConnection = (io) => async (connection) => {
         let timestampLstMssg = Date.parse(allUsrMssg.pop().addTime);
         let currentTimestamp = Date.parse(timeMsg);
 
-        console.log("timestampLstMssg", timestampLstMssg);
-        if (timestampLstMssg + 15000 >= currentTimestamp) {
-          connection.emit("spammer");
-          return;
-        }
+        // console.log("timestampLstMssg", timestampLstMssg);
+        // if (timestampLstMssg + 15000 >= currentTimestamp) {
+        //   connection.emit("spammer");
+        //   return;
+        // }
       }
       connection.emit("message", {
         messageText: msg,
@@ -154,9 +151,15 @@ exports.handleConnection = (io) => async (connection) => {
         senderUsername: username,
         addTime: timeMsg,
       });
-      messageDataProvider.createOneMessage(msg, username, timeMsg);
+      await messageDataProvider.createOneMessage(msg, username, timeMsg);
+
+      const allMessages = await messageDataProvider.getAllMessages();
+      connection.emit("download message history", allMessages);
     }
   });
+
+  const allMessages = await messageDataProvider.getAllMessages();
+  connection.emit("download message history", allMessages);
 
   connection.on("disconnect", async () => {
     await userDataProvider.findUserAndUpdate({ username }, { isOnline: false });
