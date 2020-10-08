@@ -140,9 +140,9 @@ const banUser = (banUserId) => {
   socket.emit("ban", banUserId);
 };
 
-socket.on("message", (msgInfo) => {
-  mssgBlckCreator(msgInfo.messageText, msgInfo.addTime, msgInfo.senderUsername);
-});
+// socket.on("message", (msgInfo) => {
+//   //mssgBlckCreator(msgInfo.messageText, msgInfo.addTime, msgInfo.senderUsername);
+// });
 
 socket.on("spammer", () => {
   alert("You can send messages no more than once every 15 seconds");

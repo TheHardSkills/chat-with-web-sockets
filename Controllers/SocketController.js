@@ -155,6 +155,7 @@ exports.handleConnection = (io) => async (connection) => {
 
       const allMessages = await messageDataProvider.getAllMessages();
       connection.emit("download message history", allMessages);
+      connection.broadcast.emit("download message history", allMessages);
     }
   });
 
